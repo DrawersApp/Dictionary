@@ -1,5 +1,6 @@
+package dictionary.bot;
+
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 
 /**
  * Created by harshit on 20/1/16.

@@ -1,11 +1,8 @@
-
+package dictionary.bot;
 
 import retrofit.http.GET;
 import retrofit.http.Headers;
-import retrofit.http.Path;
 import retrofit.http.Query;
-
-import java.util.List;
 
 /**
  * Created by harshit on 20/1/16.

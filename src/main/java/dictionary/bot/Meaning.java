@@ -1,3 +1,5 @@
+package dictionary.bot;
+
 import java.util.List;
 
 /**
@@ -6,7 +8,7 @@ import java.util.List;
 public class Meaning {
     @Override
     public String toString() {
-        return "Meaning{" +
+        return "dictionary.bot.Meaning{" +
                 "definitions=" + definitions +
                 '}';
     }

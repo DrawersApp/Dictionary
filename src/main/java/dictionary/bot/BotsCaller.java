@@ -1,3 +1,5 @@
+package dictionary.bot;
+
 /**
  * Created by harshit on 20/1/16.
  */

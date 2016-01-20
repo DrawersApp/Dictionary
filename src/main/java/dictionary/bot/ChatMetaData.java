@@ -1,3 +1,5 @@
+package dictionary.bot;
+
 import com.google.gson.Gson;
 
 /**
@@ -13,7 +15,7 @@ public class ChatMetaData {
 
     @Override
     public String toString() {
-        return "ChatMetaData{" +
+        return "dictionary.bot.ChatMetaData{" +
                 "subType='" + subType + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
