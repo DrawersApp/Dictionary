@@ -8,6 +8,7 @@ import rocks.xmpp.core.stream.model.StreamElement;
 import rocks.xmpp.extensions.httpbind.BoshConnectionConfiguration;
 import rocks.xmpp.extensions.json.model.Json;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -56,12 +57,14 @@ public class Bot {
             Message message = e.getMessage();
             // Handle inbound message.
             Observable.just(message)
+                    .subscribeOn(Schedulers.io())
                     .map(m -> m.getBody())
-                    .filter(b -> b!= null && b.length()>0)
+                    .filter(b -> b != null && b.length() > 0)
                     .map(w -> RetrofitAdapter.getRetrofitAdapter().getDictionaryInterface().getMeaning(w))
                     .map(x -> generateText(x))
-                    .filter( y -> y.length() > 0)
-                    .subscribe(s -> xmppClient.send(generateMessage(message.getFrom(), Message.Type.CHAT, s)));
+                    .filter(y -> y.length() > 0)
+                    .subscribe(s -> xmppClient.send(generateMessage(message.getFrom(), Message.Type.CHAT, s)) ,
+                            error -> error.printStackTrace());
         });
 
         try {
@@ -76,7 +79,7 @@ public class Bot {
          */
 
         try {
-            xmppClient.login("user", "pwd", "babbler");
+            xmppClient.login("harshit", "tractor", "babbler");
         } catch (AuthenticationException e) {
             // Login failed, because the server returned a SASL failure, most likely due to wrong credentials.
         } catch (XmppException e) {
