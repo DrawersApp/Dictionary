@@ -5,6 +5,8 @@ import rocks.xmpp.core.XmppException;
 import rocks.xmpp.core.sasl.AuthenticationException;
 import rocks.xmpp.core.session.TcpConnectionConfiguration;
 import rocks.xmpp.core.session.XmppClient;
+import rocks.xmpp.core.session.XmppSessionConfiguration;
+import rocks.xmpp.core.session.debug.ConsoleDebugger;
 import rocks.xmpp.core.stanza.model.Message;
 import rocks.xmpp.core.stream.model.StreamElement;
 import rocks.xmpp.extensions.httpbind.BoshConnectionConfiguration;
@@ -51,7 +53,11 @@ public class Bot {
                 .build();
 
 
-        XmppClient xmppClient = new XmppClient("ejabberd.sandwitch.in", tcpConfiguration, boshConfiguration);
+        XmppSessionConfiguration configuration = XmppSessionConfiguration.builder()
+                .debugger(ConsoleDebugger.class)
+                .build();
+
+        XmppClient xmppClient = new XmppClient("ejabberd.sandwitch.in", configuration, tcpConfiguration, boshConfiguration);
 
         // Listen for messages
         xmppClient.addInboundMessageListener(e -> {
@@ -81,7 +87,7 @@ public class Bot {
          */
 
         try {
-            xmppClient.login("username", "password", "babbler");
+            xmppClient.login("harshit", "tractor", "babbler");
         } catch (AuthenticationException e) {
             // Login failed, because the server returned a SASL failure, most likely due to wrong credentials.
         } catch (XmppException e) {
