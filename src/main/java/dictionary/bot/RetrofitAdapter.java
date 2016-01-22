@@ -2,6 +2,8 @@ package dictionary.bot;
 
 import retrofit.RestAdapter;
 
+import java.util.stream.Collectors;
+
 /**
  * Created by harshit on 20/1/16.
  */
@@ -32,6 +34,14 @@ public class RetrofitAdapter {
                 .build();
 
         dictionaryInterface = restAdapter.create(DictionaryInterface.class);
+    }
+
+    static String generateText(Meaning meaning) {
+        if (meaning != null && meaning.getDefinitions() != null) {
+            return meaning.getDefinitions().stream().map(w  -> w.getText()).collect(Collectors.joining("\n"));
+        } else {
+            return "";
+        }
     }
 
 

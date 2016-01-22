@@ -15,7 +15,6 @@ import rx.schedulers.Schedulers;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Created by harshit on 20/1/16.
@@ -58,14 +57,15 @@ public class Bot {
         xmppClient.addInboundMessageListener(e -> {
             Message message = e.getMessage();
             // Handle inbound message.
+            // TODO - Add check if message is text type.
             Observable.just(message)
                     .subscribeOn(Schedulers.io())
-                    .map(m -> m.getBody())
-                    .filter(b -> b != null && b.length() > 0)
-                    .map(w -> RetrofitAdapter.getRetrofitAdapter().getDictionaryInterface().getMeaning(w))
-                    .map(x -> generateText(x))
-                    .filter(y -> y.length() > 0)
-                    .subscribe(s -> xmppClient.send(generateMessage(message.getFrom(), Message.Type.CHAT, s)) ,
+                    .map(msg -> msg.getBody())
+                    .filter(body -> body != null && body.length() > 0)
+                    .map(word -> RetrofitAdapter.getRetrofitAdapter().getDictionaryInterface().getMeaning(word))
+                    .map(meaning -> RetrofitAdapter.generateText(meaning))
+                    .filter(serializedMeaning -> serializedMeaning.length() > 0)
+                    .subscribe(output -> xmppClient.send(generateMessage(message.getFrom(), Message.Type.CHAT, output)) ,
                             error -> error.printStackTrace());
         });
 
@@ -81,7 +81,7 @@ public class Bot {
          */
 
         try {
-            xmppClient.login("harshit", "tractor", "babbler");
+            xmppClient.login("username", "password", "babbler");
         } catch (AuthenticationException e) {
             // Login failed, because the server returned a SASL failure, most likely due to wrong credentials.
         } catch (XmppException e) {
@@ -96,13 +96,7 @@ public class Bot {
         return message;
     }
 
-    private String generateText(Meaning meaning) {
-        if (meaning != null && meaning.getDefinitions() != null) {
-           return meaning.getDefinitions().stream().map(w  -> w.getText()).collect(Collectors.joining("\n"));
-        } else {
-            return "";
-        }
-    }
+
 
     public Json generateJsonContainer(ChatType chatType) {
         ChatMetaData  chatMetaData = new ChatMetaData(chatType.toString(), System.currentTimeMillis());
