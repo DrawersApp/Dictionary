@@ -11,11 +11,18 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-core-client:0.6.2" level="project" />
-    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-core:0.6.2" level="project" />
-    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-addr:0.6.2" level="project" />
-    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-extensions-client:0.6.2" level="project" />
-    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-extensions:0.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-java7:4.2.0-alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-core:4.2.0-alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.jxmpp:jxmpp-jid:0.5.0-alpha6" level="project" />
+    <orderEntry type="library" name="Maven: org.jxmpp:jxmpp-util-cache:0.5.0-alpha6" level="project" />
+    <orderEntry type="library" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
+    <orderEntry type="library" name="Maven: org.jxmpp:jxmpp-core:0.5.0-alpha6" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-resolver-javax:4.2.0-alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-sasl-javax:4.2.0-alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-tcp:4.2.0-alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-extensions:4.2.0-alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-im:4.2.0-alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.igniterealtime.smack:smack-experimental:4.2.0-alpha2" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.retrofit:retrofit:1.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: io.reactivex:rxjava:1.0.3" level="project" />

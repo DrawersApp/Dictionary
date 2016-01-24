@@ -1,21 +1,21 @@
 package dictionary.bot;
 
-import rocks.xmpp.addr.Jid;
-import rocks.xmpp.core.XmppException;
-import rocks.xmpp.core.sasl.AuthenticationException;
-import rocks.xmpp.core.session.TcpConnectionConfiguration;
-import rocks.xmpp.core.session.XmppClient;
-import rocks.xmpp.core.session.XmppSessionConfiguration;
-import rocks.xmpp.core.session.debug.ConsoleDebugger;
-import rocks.xmpp.core.stanza.model.Message;
-import rocks.xmpp.core.stream.model.StreamElement;
-import rocks.xmpp.extensions.httpbind.BoshConnectionConfiguration;
-import rocks.xmpp.extensions.json.model.Json;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.filter.MessageTypeFilter;
+import org.jivesoftware.smack.filter.StanzaFilter;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.TLSUtils;
+import org.jivesoftware.smackx.json.packet.JsonPacketExtension;
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -24,89 +24,97 @@ import java.util.UUID;
 public class Bot {
 
     private static Bot bot;
+    private XMPPTCPConnection xmppConnection;
 
-    private Bot() {
+    private Bot() throws XmppStringprepException {
         initializeConnection();
     }
 
-    public static synchronized Bot getBot() {
+    public static synchronized Bot getBot() throws XmppStringprepException {
         if (bot == null) {
             bot = new Bot();
         }
         return bot;
     }
 
-    public void initializeConnection() {
-        TcpConnectionConfiguration tcpConfiguration = TcpConnectionConfiguration.builder()
-                .hostname("ejabberd.sandwitch.in")
-                .port(5222)
-                .proxy(Proxy.NO_PROXY)        // Proxy for the TCP connection
-                .keepAliveInterval(20)        // Whitespace keep-alive interval
-                .secure(false)
-                .build();
-        BoshConnectionConfiguration boshConfiguration = BoshConnectionConfiguration.builder()
-                .hostname("ejabberd.sandwitch.in")
-                .port(5280)
-                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("hostname", 3128)))
-                .file("/http-bind/")
-                .wait(60)  // BOSH connection manager should wait maximal 60 seconds before responding to a request.
-                .build();
-
-
-        XmppSessionConfiguration configuration = XmppSessionConfiguration.builder()
-                .debugger(ConsoleDebugger.class)
-                .build();
-
-        XmppClient xmppClient = new XmppClient("ejabberd.sandwitch.in", configuration, tcpConfiguration, boshConfiguration);
-
-        // Listen for messages
-        xmppClient.addInboundMessageListener(e -> {
-            Message message = e.getMessage();
-            // Handle inbound message.
-            // TODO - Add check if message is text type.
-            Observable.just(message)
-                    .subscribeOn(Schedulers.io())
-                    .map(msg -> msg.getBody())
-                    .filter(body -> body != null && body.length() > 0)
-                    .map(word -> RetrofitAdapter.getRetrofitAdapter().getDictionaryInterface().getMeaning(word))
-                    .map(meaning -> RetrofitAdapter.generateText(meaning))
-                    .filter(serializedMeaning -> serializedMeaning.length() > 0)
-                    .subscribe(output -> xmppClient.send(generateMessage(message.getFrom(), Message.Type.CHAT, output)) ,
-                            error -> error.printStackTrace());
-        });
-
+    public void initializeConnection() throws XmppStringprepException {
+        SmackConfiguration.setDefaultPacketReplyTimeout(30 * 1000);
+        XMPPTCPConnectionConfiguration.Builder config = XMPPTCPConnectionConfiguration.builder();
+        config.setUsernameAndPassword("42382d53-272e-4674-8079-453dc22ee412", "dictionary");
+        config.setResource("smack");
+        config.setXmppDomain(JidCreate.domainBareFrom("ejabberd.sandwitch.in"));
+        config.setDebuggerEnabled(true);
+        config.setCompressionEnabled(true);
+        config.setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
+        config.setKeystorePath("src/main/java/res/ser.cert");
         try {
-            xmppClient.connect();
-        } catch (XmppException e) {
+            TLSUtils.acceptAllCertificates(config);
+            TLSUtils.disableHostnameVerificationForTlsCertificicates(config);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
+        xmppConnection = new XMPPTCPConnection(config.build());
+
+        xmppConnection.setUseStreamManagement(true);
+        xmppConnection.setUseStreamManagementResumption(true);
+        xmppConnection.setPreferredResumptionTime(5 * 60);
+        // Listen for messages
+        StanzaFilter chatFilter = MessageTypeFilter.CHAT;
+        xmppConnection.addAsyncStanzaListener(new StanzaListener() {
+            @Override
+            public void processPacket(Stanza packet) throws SmackException.NotConnectedException, InterruptedException {
+                Message message = (Message) packet;
+                Observable.just(message)
+                        .subscribeOn(Schedulers.computation())
+                        .map(msg -> msg.getBody())
+                        .filter(body -> body != null && body.length() > 0)
+                        .map(word -> RetrofitAdapter.getRetrofitAdapter().getDictionaryInterface().getMeaning(word))
+                        .map(meaning -> RetrofitAdapter.generateText(meaning))
+                        .filter(serializedMeaning -> serializedMeaning.length() > 0)
+                        .subscribe(output -> {
+                            try {
+                                xmppConnection.sendPacket(generateMessage(message.getFrom(), Message.Type.chat, output));
+                            } catch (SmackException.NotConnectedException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
+            }
+        }, chatFilter);
+        try {
+            xmppConnection.connect();
+        } catch (InterruptedException | XMPPException | SmackException | IOException e) {
+            e.printStackTrace();
+        }
         /*
           Third parameter is resource. Used to support chat across different entities like Laptop/Mobile.
           Hard code resource to the client/libray - help us identify the client.
          */
 
         try {
-            xmppClient.login("harshit", "tractor", "babbler");
-        } catch (AuthenticationException e) {
-            // Login failed, because the server returned a SASL failure, most likely due to wrong credentials.
-        } catch (XmppException e) {
-            // Other causes, e.g. no response, failure during resource binding, etc.
+            xmppConnection.login();
+        } catch (InterruptedException | IOException | SmackException | XMPPException e) {
+            e.printStackTrace();
         }
     }
 
-    private StreamElement generateMessage(Jid from, Message.Type chat, String s) {
-        Message message = new Message(from, chat, s);
-        message.setId(UUID.randomUUID().toString());
+    private Message generateMessage(Jid from, Message.Type chat, String s) {
+        Message message = new Message();
+        message.setStanzaId(UUID.randomUUID().toString());
+        message.setType(chat);
+        message.setTo(from);
+        message.setBody(s);
         message.addExtension(generateJsonContainer(ChatType.TEXT));
         return message;
     }
 
 
 
-    public Json generateJsonContainer(ChatType chatType) {
+    public JsonPacketExtension generateJsonContainer(ChatType chatType) {
         ChatMetaData  chatMetaData = new ChatMetaData(chatType.toString(), System.currentTimeMillis());
-        Json jsonPacketExtension = new Json(chatMetaData.toJsonString());
+        JsonPacketExtension jsonPacketExtension = new JsonPacketExtension(chatMetaData.toJsonString());
         return jsonPacketExtension;
     }
 
