@@ -36,13 +36,4 @@ public class RetrofitAdapter {
         dictionaryInterface = restAdapter.create(DictionaryInterface.class);
     }
 
-    static String generateText(Meaning meaning) {
-        if (meaning != null && meaning.getDefinitions() != null) {
-            return meaning.getDefinitions().stream().map(w  -> w.getText()).collect(Collectors.joining("\n"));
-        } else {
-            return "";
-        }
-    }
-
-
 }
