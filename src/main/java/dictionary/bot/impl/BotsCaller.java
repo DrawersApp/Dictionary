@@ -16,7 +16,7 @@ public class BotsCaller implements MessageSubscriber {
         Class.forName(MeaningOperations.class.getName());
         System.out.print(DrawersBotStringHelp.getDrawersBotStringHelp().toJsonString());
         BotsCaller botsCaller = new BotsCaller();
-        Bot.getBot(botsCaller);
+        Bot.getBot(botsCaller, "42382d53-272e-4674-8079-453dc22ee412", "dictionary");
         while (true) {
             Thread.sleep(1000000000000L);
         }

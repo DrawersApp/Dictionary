@@ -31,14 +31,19 @@ public class Bot implements PingFailedListener {
     private MessageSubscriber messageSubscriber;
     private ExecutorService executorService = Executors.newFixedThreadPool(5);
 
-    private Bot(MessageSubscriber messageSubscriber) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
+    public String name = "42382d53-272e-4674-8079-453dc22ee412";
+    public String pwd = "dictionary";
+
+    private Bot(MessageSubscriber messageSubscriber, String name, String pwd) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         this.messageSubscriber = messageSubscriber;
         initializeConnection();
+        this.name = name;
+        this.pwd = pwd;
     }
 
-    public static synchronized Bot getBot(MessageSubscriber messageSubscriber) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
+    public static synchronized Bot getBot(MessageSubscriber messageSubscriber, String name, String pwd) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         if (bot == null) {
-            bot = new Bot(messageSubscriber);
+            bot = new Bot(messageSubscriber, name, pwd);
         }
         return bot;
     }
@@ -56,7 +61,7 @@ public class Bot implements PingFailedListener {
         SmackConfiguration.setDefaultPacketReplyTimeout(30 * 1000);
         PingManager.setDefaultPingInterval(5 * 60);
         XMPPTCPConnectionConfiguration.Builder config = XMPPTCPConnectionConfiguration.builder();
-        config.setUsernameAndPassword("42382d53-272e-4674-8079-453dc22ee412", "dictionary");
+        config.setUsernameAndPassword(name, pwd);
         config.setResource("smack");
         config.setXmppDomain(JidCreate.domainBareFrom("ejabberd.sandwitch.in"));
         config.setDebuggerEnabled(true);
@@ -79,6 +84,9 @@ public class Bot implements PingFailedListener {
             @Override
             public void processPacket(Stanza packet) throws SmackException.NotConnectedException, InterruptedException {
                 Message message = (Message) packet;
+                if (message.getFrom().getLocalpartOrNull().equals(name)) {
+                    return;
+                }
                 executorService.submit(() -> replyMessage(message));
             }
         }, chatFilter);

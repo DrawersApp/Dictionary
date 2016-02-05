@@ -17,6 +17,15 @@ public interface MessageSubscriber {
 
     /**
      *
+     * @return String
+     * Publishes text to algolia.
+     */
+    default void publishText() {
+         DrawersBotStringHelp.getDrawersBotStringHelp().toJsonString();
+    }
+
+    /**
+     *
      * @param message
      * @return String
      * This function takes the input message,
