@@ -1,6 +1,8 @@
 package dictionary.bot;
 
 
+import dictionary.bot.impl.OperationsType;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,7 +1,8 @@
-package dictionary.bot;
+package dictionary.bot.impl;
+
+import dictionary.bot.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

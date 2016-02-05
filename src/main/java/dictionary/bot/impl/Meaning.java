@@ -1,4 +1,6 @@
-package dictionary.bot;
+package dictionary.bot.impl;
+
+import dictionary.bot.OutputBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +11,7 @@ import java.util.stream.Collectors;
 public class Meaning implements OutputBody {
     @Override
     public String toString() {
-        return "dictionary.bot.Meaning{" +
+        return "dictionary.bot.impl.Meaning{" +
                 "definitions=" + definitions +
                 '}';
     }

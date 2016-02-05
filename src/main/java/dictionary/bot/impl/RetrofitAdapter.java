@@ -1,8 +1,6 @@
-package dictionary.bot;
+package dictionary.bot.impl;
 
 import retrofit.RestAdapter;
-
-import java.util.stream.Collectors;
 
 /**
  * Created by harshit on 20/1/16.
@@ -20,19 +18,23 @@ public class RetrofitAdapter {
         return retrofitAdapter;
     }
 
-    private DictionaryInterface  dictionaryInterface;
+    private DictionaryInterface dictionaryInterface;
 
 
     public DictionaryInterface getDictionaryInterface() {
         return dictionaryInterface;
     }
 
+    /**
+     * Create rest adapter to make rest call.
+     * http://drawersapp.github.io/Retrofit/website/index.html
+     */
     private void createDictionaryInterface() {
+        // TODO - Set your end point.
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://montanaflynn-dictionary.p.mashape.com")
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
-
         dictionaryInterface = restAdapter.create(DictionaryInterface.class);
     }
 

@@ -1,10 +1,13 @@
-package dictionary.bot;
+package dictionary.bot.impl;
 
+import dictionary.bot.Bot;
+import dictionary.bot.DrawersBotStringHelp;
+import dictionary.bot.MessageSubscriber;
 import org.jivesoftware.smack.SmackException;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 /**
- * Created by harshit on 20/1/16.
+ * Initializing the bot.
  */
 public class BotsCaller implements MessageSubscriber {
 

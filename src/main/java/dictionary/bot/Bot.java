@@ -84,6 +84,7 @@ public class Bot implements PingFailedListener {
         }, chatFilter);
         PingManager.getInstanceFor(xmppConnection).registerPingFailedListener(this);
         PingManager.getInstanceFor(xmppConnection).setPingInterval(5 * 60);
+        ReconnectionManager.getInstanceFor(xmppConnection).enableAutomaticReconnection();
         try {
             xmppConnection.connect();
         } catch (InterruptedException | XMPPException | SmackException | IOException e) {

@@ -83,7 +83,7 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>dictionary.bot.BotsCaller</Main-Class>
+                                        <Main-Class>dictionary.bot.impl.BotsCaller</Main-Class>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
