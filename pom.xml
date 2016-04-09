@@ -10,6 +10,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.DrawersApp</groupId>
+            <artifactId>drawers-java-sdk</artifactId>
+            <version>v1.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-java7</artifactId>
             <version>4.2.0-alpha2</version>
@@ -97,5 +102,11 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>

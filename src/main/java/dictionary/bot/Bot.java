@@ -1,3 +1,4 @@
+/*
 package dictionary.bot;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
@@ -19,11 +20,13 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+*/
 /**
  * Main bot class contains the logic for incoming and reply message.
  * @author harshit
  * @version 1.0.0
- */
+ *//*
+
 public class Bot implements PingFailedListener {
 
     private static Bot bot;
@@ -48,7 +51,8 @@ public class Bot implements PingFailedListener {
         return bot;
     }
 
-    /**
+    */
+/**
      * Building the connection with stream resumption.
      * Stream resumption allows for quick reconnect for flaky networks.
      * Listening for incoming message and dispatching to message subscriber using thread pool of size 5.
@@ -56,7 +60,8 @@ public class Bot implements PingFailedListener {
      * @throws XmppStringprepException
      * @throws SmackException.NotConnectedException
      * @throws InterruptedException
-     */
+     *//*
+
     public void initializeConnection() throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         SmackConfiguration.setDefaultPacketReplyTimeout(30 * 1000);
         PingManager.setDefaultPingInterval(5 * 60);
@@ -105,12 +110,14 @@ public class Bot implements PingFailedListener {
         }
     }
 
-    /**
+    */
+/**
      *
      * @param message
      * Generates the message from subscriber and propogate to {@link #sendMessage(Jid, String)}.
      * Also check for error conditions.
-     */
+     *//*
+
     private void replyMessage(Message message) {
         if (message.getBody() == null) {
             return;
@@ -124,12 +131,14 @@ public class Bot implements PingFailedListener {
         sendMessage(message.getFrom(), replyMessage);
     }
 
-    /**
+    */
+/**
      *
      * @param jid
      * @param reply
      * Sends the actual stanza.
-     */
+     *//*
+
     private void sendMessage(Jid jid, String reply) {
         try {
             xmppConnection.sendStanza(generateMessage(jid, Message.Type.chat, reply));
@@ -140,14 +149,16 @@ public class Bot implements PingFailedListener {
         }
     }
 
-    /**
+    */
+/**
      *
      * @param from - Jid to which we need to reply.
      * @param chat - message type. hardcoded.
      * @param s  - reply.
      * @return Message
      * This method generates the entire message with extensions.
-     */
+     *//*
+
     private Message generateMessage(Jid from, Message.Type chat, String s) {
         Message message = new Message();
         message.setStanzaId(UUID.randomUUID().toString());
@@ -159,12 +170,14 @@ public class Bot implements PingFailedListener {
     }
 
 
-    /**
+    */
+/**
      *
      * @param chatType
      * @return JsonPacketExtension
      * Adds metadata such as time and chattype to packet to help the client arrange and render the message.
-     */
+     *//*
+
     public JsonPacketExtension generateJsonContainer(ChatType chatType) {
         ChatMetaData  chatMetaData = new ChatMetaData(chatType.toString(), System.currentTimeMillis());
         JsonPacketExtension jsonPacketExtension = new JsonPacketExtension(chatMetaData.toJsonString());
@@ -181,3 +194,4 @@ public class Bot implements PingFailedListener {
         }
     }
 }
+*/

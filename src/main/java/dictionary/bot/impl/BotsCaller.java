@@ -1,31 +1,37 @@
 package dictionary.bot.impl;
 
-import dictionary.bot.Bot;
 import dictionary.bot.DrawersBotStringHelp;
 import dictionary.bot.MessageSubscriber;
+import org.drawers.bot.DrawersClient;
+import org.drawers.bot.dto.DrawersMessage;
 import org.jivesoftware.smack.SmackException;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 /**
  * Initializing the bot.
  */
-public class BotsCaller implements MessageSubscriber {
+public class BotsCaller extends DrawersClient implements MessageSubscriber {
+
+    public BotsCaller(String clientId, String password) {
+        super(clientId, password);
+    }
 
     public static void main(String[] args) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException, ClassNotFoundException {
         // Load all the classes which contains string.
         Class.forName(MeaningOperations.class.getName());
         System.out.print(DrawersBotStringHelp.getDrawersBotStringHelp().toJsonString());
-        BotsCaller botsCaller = new BotsCaller();
-        Bot.getBot(botsCaller, "42382d53-272e-4674-8079-453dc22ee412", "dictionary");
-        while (true) {
-            Thread.sleep(1000000000000L);
-        }
+
+        BotsCaller botsCaller = new BotsCaller("09676880-82c2-4e85-9d69-a979f4bf5ebe", "dictionary");
+        botsCaller.startBot();
     }
 
-    private String errorDefaultText = "Something went wrong";
+    @Override
+    public DrawersMessage processMessageAndReply(DrawersMessage message) {
+        return generateReply(message);
+    }
 
     @Override
-    public String getErrorDefaultText() {
-        return errorDefaultText;
+    public DrawersMessage getErrorDefaultMessage(DrawersMessage message) {
+        return new DrawersMessage(message.getSender(), "Something went wrong");
     }
 }
