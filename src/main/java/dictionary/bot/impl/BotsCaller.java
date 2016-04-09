@@ -4,8 +4,6 @@ import dictionary.bot.DrawersBotStringHelp;
 import dictionary.bot.MessageSubscriber;
 import org.drawers.bot.DrawersClient;
 import org.drawers.bot.dto.DrawersMessage;
-import org.jivesoftware.smack.SmackException;
-import org.jxmpp.stringprep.XmppStringprepException;
 
 /**
  * Initializing the bot.
@@ -16,7 +14,7 @@ public class BotsCaller extends DrawersClient implements MessageSubscriber {
         super(clientId, password);
     }
 
-    public static void main(String[] args) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException, ClassNotFoundException {
+    public static void main(String[] args) throws ClassNotFoundException {
         // Load all the classes which contains string.
         Class.forName(MeaningOperations.class.getName());
         System.out.print(DrawersBotStringHelp.getDrawersBotStringHelp().toJsonString());
