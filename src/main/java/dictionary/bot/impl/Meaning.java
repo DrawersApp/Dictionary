@@ -2,7 +2,6 @@ package dictionary.bot.impl;
 
 import dictionary.bot.OutputBody;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -26,7 +25,14 @@ public class Meaning implements OutputBody {
         this.list = list;
     }
 
-    public class Definitions implements Comparator<Definitions> {
+    public class Definitions implements Comparable<Definitions> {
+
+        @Override
+        public int compareTo(Definitions o2) {
+            if (Math.abs(this.getThumbs_up() - this.getThumbs_down()) < Math.abs(o2.getThumbs_up() - o2.getThumbs_down())) return -1;
+            if (this == o2) return 0;
+            else return 1;
+        }
 
         @Override
         public String toString() {
@@ -65,13 +71,6 @@ public class Meaning implements OutputBody {
 
         public void setDefinition(String definition) {
             this.definition = definition;
-        }
-
-        @Override
-        public int compare(Definitions o1, Definitions o2) {
-            if (Math.abs(o1.getThumbs_up() - o1.getThumbs_down()) < Math.abs(o2.getThumbs_up() - o2.getThumbs_down())) return -1;
-            if (o1 == o2) return 0;
-            else return 1;
         }
     }
 

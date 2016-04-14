@@ -17,7 +17,7 @@ public class BotsCaller extends DrawersClient implements MessageSubscriber {
     public static void main(String[] args) throws ClassNotFoundException {
         // Load all the classes which contains string.
         Class.forName(MeaningOperations.class.getName());
-        System.out.print(DrawersBotStringHelp.getDrawersBotStringHelp().toJsonString());
+        System.out.println(DrawersBotStringHelp.getDrawersBotStringHelp().toJsonString());
 
         BotsCaller botsCaller = new BotsCaller("09676880-82c2-4e85-9d69-a979f4bf5ebe", "dictionary");
         botsCaller.startBot();
