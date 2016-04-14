@@ -29,19 +29,25 @@ public interface MessageSubscriber {
      */
     default DrawersMessage generateReply(DrawersMessage message) {
 
-        String body = message.getMessage();
-        DrawersBotString drawersBotString = OperationsManager.getOperationsManager().getDrawersBotString(body);
-        if (drawersBotString == null) {
-            return new DrawersMessage(message.getSender(), "Incorrect message type");
+        try {
+            String body = message.getMessage();
+            DrawersBotString drawersBotString = OperationsManager.getOperationsManager().getDrawersBotString(body);
+            if (drawersBotString == null) {
+                return new DrawersMessage(message.getSender(), "Incorrect message type");
+            }
+            OutputBody outputBody = OperationsManager.getOperationsManager().performOperations(drawersBotString);
+            if (outputBody == null) {
+                return getErrorDefaultMessage(message);
+            }
+            String replyString = outputBody.toUserString();
+            System.out.println(replyString);
+            if (replyString == null || replyString.length() == 0) {
+                return getErrorDefaultMessage(message);
+            }
+            return new DrawersMessage(message.getSender(), replyString);
+        } catch (Exception ex) {
+         //   ex.printStackTrace();
+            return new DrawersMessage(message.getSender(), "Something went wrong");
         }
-        OutputBody outputBody = OperationsManager.getOperationsManager().performOperations(drawersBotString);
-        if (outputBody == null) {
-            return getErrorDefaultMessage(message);
-        }
-        String replyString = outputBody.toUserString();
-        if (replyString == null || replyString.length() == 0) {
-            return getErrorDefaultMessage(message);
-        }
-        return new DrawersMessage(message.getSender(), replyString);
     }
 }

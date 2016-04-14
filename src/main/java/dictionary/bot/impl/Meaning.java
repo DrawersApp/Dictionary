@@ -2,8 +2,8 @@ package dictionary.bot.impl;
 
 import dictionary.bot.OutputBody;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by harshit on 20/1/16.
@@ -12,43 +12,73 @@ public class Meaning implements OutputBody {
     @Override
     public String toString() {
         return "dictionary.bot.impl.Meaning{" +
-                "definitions=" + definitions +
+                "list=" + list +
                 '}';
     }
 
-    private List<Definitions> definitions;
+    private List<Definitions> list;
 
-    public List<Definitions> getDefinitions() {
-        return definitions;
+    public List<Definitions> getList() {
+        return list;
     }
 
-    public void setDefinitions(List<Definitions> definitions) {
-        this.definitions = definitions;
+    public void setList(List<Definitions> list) {
+        this.list = list;
     }
 
-    public class Definitions {
+    public class Definitions implements Comparator<Definitions> {
+
         @Override
         public String toString() {
             return "Definitions{" +
-                    "text='" + text + '\'' +
+                    "definition='" + definition + '\'' +
+                    ", thumbs_up=" + thumbs_up +
+                    ", thumbs_down=" + thumbs_down +
                     '}';
         }
 
-        private String text;
+        private String definition;
 
-        public String getText() {
-            return text;
+        private int thumbs_up;
+
+        private int thumbs_down;
+
+        public int getThumbs_up() {
+            return thumbs_up;
         }
 
-        public void setText(String text) {
-            this.text = text;
+        public void setThumbs_up(int thumbs_up) {
+            this.thumbs_up = thumbs_up;
+        }
+
+        public int getThumbs_down() {
+            return thumbs_down;
+        }
+
+        public void setThumbs_down(int thumbs_down) {
+            this.thumbs_down = thumbs_down;
+        }
+
+        public String getDefinition() {
+            return definition;
+        }
+
+        public void setDefinition(String definition) {
+            this.definition = definition;
+        }
+
+        @Override
+        public int compare(Definitions o1, Definitions o2) {
+            if (Math.abs(o1.getThumbs_up() - o1.getThumbs_down()) < Math.abs(o2.getThumbs_up() - o2.getThumbs_down())) return -1;
+            if (o1 == o2) return 0;
+            else return 1;
         }
     }
 
     @Override
     public String toUserString() {
-        if (definitions != null) {
-            return definitions.stream().map(w  -> w.getText()).collect(Collectors.joining("\n"));
+        if (list != null) {
+            return list.stream().sorted().findFirst().map(w -> w.getDefinition()).get();
         } else {
             return "";
         }

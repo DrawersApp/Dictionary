@@ -14,8 +14,9 @@ public interface DictionaryInterface {
 
     @Headers({
             "Accept: application/json",
-            "X-Mashape-Key: YgXFx8fyJemshaRWbzMMcZ21Vcpqp1CE4jAjsnAFa0RBW99WmV"
+            "X-Mashape-Key: gEqQrmnubUmshXJBCtMMxF1CBMN7p1k7cwLjsnHQHkmQDRzqxx"
+//            "X-Mashape-Key: YgXFx8fyJemshaRWbzMMcZ21Vcpqp1CE4jAjsnAFa0RBW99WmV"
     })
     @GET("/define")
-    Meaning getMeaning(@Query("word") String word);
+    Meaning getMeaning(@Query("term") String word);
 }

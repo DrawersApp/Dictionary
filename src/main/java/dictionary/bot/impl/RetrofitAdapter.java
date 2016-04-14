@@ -32,7 +32,8 @@ public class RetrofitAdapter {
     private void createDictionaryInterface() {
         // TODO - Set your end point.
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("https://montanaflynn-dictionary.p.mashape.com")
+              //  .setEndpoint("https://montanaflynn-dictionary.p.mashape.com")
+                .setEndpoint("https://mashape-community-urban-dictionary.p.mashape.com")
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         dictionaryInterface = restAdapter.create(DictionaryInterface.class);
