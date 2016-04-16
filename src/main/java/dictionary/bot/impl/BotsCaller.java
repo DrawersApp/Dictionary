@@ -19,8 +19,14 @@ public class BotsCaller extends DrawersClient implements MessageSubscriber {
         Class.forName(MeaningOperations.class.getName());
         System.out.println(DrawersBotStringHelp.getDrawersBotStringHelp().toJsonString());
 
-        BotsCaller botsCaller = new BotsCaller("09676880-82c2-4e85-9d69-a979f4bf5ebe", "dictionary");
-        botsCaller.startBot();
+        if(args.length != 2) {
+            System.out.println("Usage: java DictionaryBot <clientId> <password>");
+        } else {
+            String clientId = args[0];
+            String password = args[1];
+            BotsCaller client = new BotsCaller(clientId, password);
+            client.startBot();
+        }
     }
 
     @Override
