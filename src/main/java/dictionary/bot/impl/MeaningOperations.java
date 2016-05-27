@@ -1,6 +1,7 @@
 package dictionary.bot.impl;
 
 import dictionary.bot.*;
+import org.drawers.bot.lib.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +20,6 @@ public class MeaningOperations implements Operation {
         MeaningOperations.meaning = meaning;
     }
 
-    @Override
-    public OutputBody makeRestCall(DrawersBotString body) {
-        if (validate(body)) {
-            Meaning meaning = RetrofitAdapter.getRetrofitAdapter().getDictionaryInterface().getMeaning(word);
-            return meaning;
-        }
-        return null;
-    }
-
     static {
         List<BotStringElement> botStringElements = new ArrayList<>();
         botStringElements.add(new BotStringElement(BotStringType.U, "Explain:"));
@@ -38,20 +30,20 @@ public class MeaningOperations implements Operation {
         DrawersBotStringHelp.getDrawersBotStringHelp().getDrawersBotStrings().add(meaning);
     }
 
-    private String word;
-
-    private boolean validate(DrawersBotString drawersBotString) {
+    @Override
+    public Response operateInternal(DrawersBotString drawersBotString) {
+        String word = null;
         if (drawersBotString.getBotStringElements() == null ||
                 drawersBotString.getBotStringElements().isEmpty()
                 || drawersBotString.getBotStringElements().size() != meaning.getBotStringElements().size()) {
-            return false;
+            return new BadResponse();
         }
         for (int i = 0 ; i< drawersBotString.getBotStringElements().size() ; i++) {
             BotStringElement botStringElement = drawersBotString.getBotStringElements().get(i);
             switch (botStringElement.getType().getDesc()) {
                 case "UNEDITABLE":
                     if (!meaning.getBotStringElements().get(i).getText().equals(botStringElement.getText())) {
-                        return false;
+                        return new BadResponse();
                     }
                     break;
                 case "STRING":
@@ -59,9 +51,23 @@ public class MeaningOperations implements Operation {
                     break;
             }
         }
-        if (this.word == null) {
-            return false;
+        if (word == null) {
+            return new BadResponse();
         }
-        return true;
+        Meaning meaning = RetrofitAdapter.getRetrofitAdapter().getDictionaryInterface().getMeaning(word);
+        return meaning;
+    }
+
+    @Override
+    public boolean validateAndParse(DrawersBotString drawersBotString) {
+        return false;
+    }
+
+    public static class BadResponse implements Response {
+
+        @Override
+        public String toUserString() {
+            return "Something went wrong";
+        }
     }
 }

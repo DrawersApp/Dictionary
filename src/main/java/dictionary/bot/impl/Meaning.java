@@ -1,13 +1,13 @@
 package dictionary.bot.impl;
 
-import dictionary.bot.OutputBody;
+import org.drawers.bot.lib.Response;
 
 import java.util.List;
 
 /**
  * Created by harshit on 20/1/16.
  */
-public class Meaning implements OutputBody {
+public class Meaning implements Response {
     @Override
     public String toString() {
         return "dictionary.bot.impl.Meaning{" +
