@@ -10,7 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.github.DrawersApp:drawers-java-sdk:v1.9.9" level="project" />
+    <orderEntry type="library" name="Maven: com.github.DrawersApp:drawers-java-sdk:v2.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: com.github.DrawersApp:drawers-models:v1.7.5" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
